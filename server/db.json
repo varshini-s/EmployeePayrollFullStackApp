@@ -1,0 +1,60 @@
+{
+    "employee": [
+      {
+        "id": 1,
+        "_name": "Lisa Kudrov",
+        "_profilePic": "../assets/profile-images/Ellipse -3.png",
+        "_gender": "Female",
+        "_department": [
+          "HR",
+          "Sales",
+          "Finance"
+        ],
+        "_salary": "400000",
+        "note": "",
+        "_startDate": "2021-09-18T00:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "_name": "Emma Green Geller",
+        "_profilePic": "../assets/profile-images/Ellipse -1.png",
+        "_gender": "Female",
+        "_department": [
+          "HR",
+          "Sales",
+          "Finance"
+        ],
+        "_salary": "425400",
+        "note": "undefined",
+        "_startDate": "2021-09-16",
+        "_note": "undefined"
+      },
+      {
+        "id": 3,
+        "_name": "Michael scofield",
+        "_profilePic": "../assets/profile-images/Ellipse -7.png",
+        "_gender": "Male",
+        "_department": [
+          "HR",
+          "Sales",
+          "Others"
+        ],
+        "_salary": "400000",
+        "note": "undefined",
+        "_startDate": "2021-09-19",
+        "_note": "undefined"
+      },
+      {
+        "_name": "Emma",
+        "_profilePic": "../assets/profile-images/Ellipse -1.png",
+        "_gender": "Female",
+        "_department": [
+          "Sales"
+        ],
+        "_salary": "421500",
+        "_note": "",
+        "_startDate": "2021-09-15",
+        "id": 5
+      }
+    ]
+  }
