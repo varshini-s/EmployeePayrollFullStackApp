@@ -6,7 +6,9 @@ import profile4 from '../../assets/profile-images/Ellipse -8.png'
 import './payroll-form.scss';
 import logo from '../../assets/images/logo.png'
 import { useParams,Link,withRouter } from 'react-router-dom';
+import EmployeeService from '../../services/employee-service.js';
 
+var employee = new EmployeeService();
 const PayrollForm=(props)=>{
 
     let initialValue={
@@ -22,7 +24,7 @@ const PayrollForm=(props)=>{
         allDepartment:[
             'HR','Sales','Finance','Engineer','Others'
         ],
-        departMentValues:[],
+        departMentValue:[],
         gender:'',
         salary:'',
         day:'1',
@@ -35,7 +37,7 @@ const PayrollForm=(props)=>{
         isUpdate:false,
         error:{
 
-            deparment:'',
+            department:'',
             name:'',
             gender:'',
             salary:'',
@@ -53,24 +55,24 @@ const PayrollForm=(props)=>{
 
     const onCheckChange=(name)=>
     {
-        let index=formValue.departMentValues.indexOf(name);
-        let checkArray=[...formValue.departmentValue]
+        let index=formValue.departMentValue.indexOf(name);
+        let checkArray=[...formValue.departMentValue]
         if(index>-1)
             checkArray.splice(index,1)
         else
             checkArray.push(name);
 
-        setForm({...formValue,departMentValues:checkArray});
+        setForm({...formValue,departMentValue:checkArray});
     }
 
     const getChecked=(name)=>{
-        return formValue.departMentValues && formValue.departMentValues.includes(name);
+        return formValue.departMentValue && formValue.departMentValue.includes(name);
     }
 
     const validData=async()=>{
         let isError=false;
         let error={
-            deparment:'',
+            department:'',
             name:'',
             gender:'',
             salary:'',
@@ -103,9 +105,9 @@ const PayrollForm=(props)=>{
             isError=true;
         }
 
-        if(formValue.departMentValues.length<1)
+        if(formValue.departMentValue.length<1)
         {
-            error.departMentValues='deparment is required field'
+            error.departMentValue='department is required field'
             isError=true;
         }
 
@@ -115,7 +117,37 @@ const PayrollForm=(props)=>{
 
     const save = async(event)=>{
         event.preventDefault();
+        console.log("save");
+
+        if(await validData())
+        {
+            console.log('error',formValue);
+            return;
+        }
+    
+        let object ={
+    
+            name:formValue.name,
+            departMentValue:formValue.departMentValue,
+            gender:formValue.gender,
+            salary:formValue.salary,
+            startDate:`${formValue.day} ${formValue.month} ${formValue.year}`,
+            notes:formValue.notes,
+            id:formValue.id,
+            profileUrl:formValue.profileUrl,
+        }
+
+        employee.addEmployee(object).then(data=>{
+            console.log("data added");
+        }).catch(err =>{
+            console.log("err while add");
+        })
+
     }
+
+  
+
+   
 
     const reset=()=>{
         setForm({...initialValue,id:formValue.id,isUpdate: formValue.isUpdate})
@@ -141,7 +173,7 @@ const PayrollForm=(props)=>{
                     <div className="form-head">Employee payroll form</div>
                     <div className="row">
                         <label className="label text" htmlFor="name">Name</label>
-                        <input className="input" type="text" id="name" value={formValue.name} onChange={changeValue} placeholder="Your name.."/>
+                        <input className="input" type="text" id="name" name="name" value={formValue.name} onChange={changeValue} placeholder="Your name.."/>
 
                     </div>
                     <div className="error">{formValue.error.name}</div>
@@ -188,17 +220,17 @@ const PayrollForm=(props)=>{
                             {formValue.allDepartment.map(item=>(
                                 <span key={item}>
 
-                                    <input className= "checkbox " type="checkbox"onChange={()=> onCheckChange(item)} name={item}
+                                    <input className= "checkbox " type="checkbox" onChange={()=> onCheckChange(item)} name={item}
                                     defaultChecked={()=>getChecked(item)} value={item}/>
 
-                                    <label className="text department" htmlFor={item}>{item}</label>
+                                    <label className="text" htmlFor={item}>{item}</label>
                                 </span>
                             ))}
                         </div>
                             
                     </div>
 
-                    <div className="error">{formValue.error.deparment}</div>
+                    <div className="error">{formValue.error.department}</div>
                     <div className="row">
                         <label className="label text" htmlFor="salary">Salary</label>
                         <input className="input" type="number" onChange={changeValue} id="salary" value={formValue.salary} name="salary" placeholder="Salary"/>
