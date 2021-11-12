@@ -8,7 +8,16 @@ export default class EmployeeService{
     {
         return AxiosService.postService(`${this.baseUrl}employee`,data);
     }
+
+    getAllEmployee()
+    {
+        return AxiosService.getService(`${this.baseUrl}employee`);
+
+    }
+
+
 }
+
 
 
 
