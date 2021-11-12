@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import PayrollForm from './components/payroll-form/payroll-form'
+import PayrollForm from './components/payroll-form/payroll-form.jsx'
+import HomePage from './components/home-page/home-page'
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,11 +15,9 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route exact path="">
+          <Route exact path="/"><HomePage/></Route>
+          <Route exact path="/payroll-form"><PayrollForm/></Route>
 
-            <PayrollForm/>
-
-          </Route>
         </Switch>
       </Router>
     </div>
