@@ -8,8 +8,9 @@ import logo from '../../assets/images/logo.png'
 import { useParams,Link,withRouter } from 'react-router-dom';
 import EmployeeService from '../../services/employee-service.js';
 import DisplayMessage from '../displayMessage/display-message';
+import PageHeader from '../page-header/page-header';
 
-var employee = new EmployeeService();
+var employeeService = new EmployeeService();
 const PayrollForm=(props)=>{
 
     let initialValue={
@@ -145,7 +146,7 @@ const PayrollForm=(props)=>{
             profileUrl:formValue.profileUrl,
         }
 
-        employee.addEmployee(object).then(data=>{
+        employeeService.addEmployee(object).then(data=>{
             console.log("data added");
             setDisplayeMessage("Successfullly added User")
             setTimeout(()=>{
@@ -158,6 +159,8 @@ const PayrollForm=(props)=>{
 
         })
 
+       
+
     }
 
 
@@ -169,17 +172,7 @@ const PayrollForm=(props)=>{
     return(
 
         <div className="payroll-main">
-             <header className="header row center">
-
-                <div className="logo">
-                <img src={logo} alt=""/>
-                    <div>
-                        <span className="emp-text">EMPLOYEE</span><br/>
-                        <span className="emp-text emp-payroll">PAYROLL</span>
-                    </div>
-                </div>
-
-            </header>
+            <PageHeader/>
             <div className="content">
                 <form className="form" action="#" onSubmit={save}>
                     <div className="form-head">Employee payroll form</div>
