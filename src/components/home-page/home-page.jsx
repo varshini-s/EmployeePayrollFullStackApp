@@ -28,13 +28,17 @@ const HomePage = () => {
         }).catch(error =>{
             console.log(error);
         })
-        }
-
-  
-    openSearch() {
-
     }
-    search() {
+
+    const deleteEmployee = (employeeId) => {
+        employeeService.deleteEmployee(employeeId).then((response) =>{
+         getAllEmployees();
+ 
+        }).catch(error =>{
+            console.log(error);
+        })
+         
+     }
 
 
 
