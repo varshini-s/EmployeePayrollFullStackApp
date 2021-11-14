@@ -16,7 +16,11 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/"><HomePage/></Route>
+          <Route exact path="/home"><HomePage/></Route>
+
           <Route exact path="/payroll-form"><PayrollForm/></Route>
+          <Route path = "/edit-employee/:id"><PayrollForm/></Route>
+
 
         </Switch>
       </Router>
