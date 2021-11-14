@@ -1,14 +1,17 @@
-import React,{useState,usEffect} from 'react';
-import profile1 from '../../assets/profile-images/Ellipse -3.png'
-import profile2 from '../../assets/profile-images/Ellipse -2.png'
-import profile3 from '../../assets/profile-images/Ellipse -1.png'
-import profile4 from '../../assets/profile-images/Ellipse -8.png'
+import React, {useState, useEffect} from 'react'
 import './payroll-form.scss';
-import logo from '../../assets/images/logo.png'
-import { useParams,Link,withRouter } from 'react-router-dom';
+import {Link, useHistory, useParams } from 'react-router-dom';
 import EmployeeService from '../../services/employee-service.js';
-import DisplayMessage from '../displayMessage/display-message';
 import PageHeader from '../page-header/page-header';
+import profileImage1 from '../../assets/profile-images/Ellipse -3.png'
+import profileImage2 from '../../assets/profile-images/Ellipse -2.png'
+import profileImage3 from '../../assets/profile-images/Ellipse -1.png'
+import profileImage4 from '../../assets/profile-images/Ellipse -8.png'
+var profile1="profile-images/Ellipse -3.png"
+var profile2="profile-images/Ellipse -2.png"
+var profile3="profile-images/Ellipse -1.png"
+var profile4="profile-images/Ellipse -8.png"
+
 
 var employeeService = new EmployeeService();
 const PayrollForm=(props)=>{
@@ -17,41 +20,112 @@ const PayrollForm=(props)=>{
 
         name:'',
         profileArray:[
-            {url:'../../../assets/profile-images/Ellipse -3'},
-            {url:'../../../assets/profile-images/Ellipse -2'},
-            {url:'../../../assets/profile-images/Ellipse -1'},
-            {url:'../../../assets/profile-images/Ellipse -8'},
+            {url:'profile-images/Ellipse -3.png'},
+            {url:'.profile-images/Ellipse -2.png'},
+            {url:'profile-images/Ellipse -1.png'},
+            {url:'profile-images/Ellipse -8.png'},
 
         ],
         allDepartment:[
             'HR','Sales','Finance','Engineer','Others'
         ],
-        departMentValue:[],
+        department:[],
         gender:'',
         salary:'',
-        day:'1',
-        month:'Jan',
-        year:'2020',
+        day:'',
+        month:'',
+        year:'',
         startDate:'',
-        notes:'',
-        id:'',
-        profileUrl:'',
-        isUpdate:false,
+        note:'',
+        profilePic:'',
+        isUpdate:true,
         error:{
 
             department:'',
             name:'',
             gender:'',
             salary:'',
-            profileUrl:'',
+            profilePic:'',
             startDate:''
         }
 
     }
 
+   
     const [formValue,setForm]=useState(initialValue);
     const [displayMessage,setDisplayeMessage]=useState("");
+    const history = useHistory();
+    const {id} = useParams();
+   
 
+
+    useEffect(() => {
+
+        employeeService.getEmployeeById(id).then((response) =>
+        {
+            var dateArray=response.data.data.startDate.split("-");
+            console.log(response.data.data.department)
+            var monthVal;
+            switch (dateArray[1]) 
+            {
+                case "01":
+                    monthVal="Jan"
+                    break;
+                case "02":
+                    monthVal="Feb"
+                    break;
+                case "03":
+                    monthVal="Mar"
+                    break;
+                case "04":
+                    monthVal="Apr"
+                    break;
+                case "05":
+                    monthVal="May"
+                    break;
+                case "06":
+                    monthVal="Jun"
+                    break;
+                case "07":
+                    monthVal="Jul"
+                    break;
+                case "08":
+                    monthVal="Aug"
+                    break;
+                case "09":
+                    monthVal="Sep"
+                    break;
+                case "10":
+                    monthVal="Oct"
+                    break;
+                case "11":
+                    monthVal="Nov"
+                    break;
+                case "12":
+                    monthVal="Dec"
+                    break;
+            
+                default:
+                    break;
+            }
+
+            
+            setForm({...formValue,
+                    name:response.data.data.name,
+                    profilePic:response.data.data.profilePic,
+                    department:response.data.data.department,
+                    gender:response.data.data.gender,
+                    salary:response.data.data.salary,
+                    startDate:response.data.data.startDate,
+                    day:dateArray[2],
+                    month:monthVal,
+                    year:dateArray[0],
+                    note:response.data.data.note});
+
+        }).catch(error => {
+            console.log(error)
+        })
+    }, [])
 
     const changeValue=(event)=>{
         setForm({...formValue,[event.target.name]:event.target.value})
@@ -59,19 +133,16 @@ const PayrollForm=(props)=>{
 
     const onCheckChange=(name)=>
     {
-        let index=formValue.departMentValue.indexOf(name);
-        let checkArray=[...formValue.departMentValue]
+        let index=formValue.department.indexOf(name);
+        let checkArray=[...formValue.department]
         if(index>-1)
             checkArray.splice(index,1)
         else
             checkArray.push(name);
 
-        setForm({...formValue,departMentValue:checkArray});
+        setForm({...formValue,department:checkArray});
     }
 
-    const getChecked=(name)=>{
-        return formValue.departMentValue && formValue.departMentValue.includes(name);
-    }
 
     const validData=async()=>{
         let isError=false;
@@ -80,7 +151,7 @@ const PayrollForm=(props)=>{
             name:'',
             gender:'',
             salary:'',
-            profileUrl:'',
+            profilePic:'',
             startDate:''
 
         }
@@ -108,15 +179,15 @@ const PayrollForm=(props)=>{
             isError=true;
         }
 
-        if(formValue.profileUrl.length<1)
+        if(formValue.profilePic.length<1)
         {
-            error.profileUrl='profile is required field'
+            error.profilePic='profile is required field'
             isError=true;
         }
 
-        if(formValue.departMentValue.length<1)
+        if(formValue.department.length<1)
         {
-            error.departMentValue='department is required field'
+            error.department='department is required field'
             isError=true;
         }
 
@@ -137,35 +208,48 @@ const PayrollForm=(props)=>{
         let object ={
     
             name:formValue.name,
-            departMentValue:formValue.departMentValue,
+            department:formValue.department,
             gender:formValue.gender,
             salary:formValue.salary,
             startDate:`${formValue.day} ${formValue.month} ${formValue.year}`,
-            notes:formValue.notes,
-            id:formValue.id,
-            profileUrl:formValue.profileUrl,
+            note:formValue.note,
+            // id:formValue.id,
+            profilePic:formValue.profilePic,
         }
 
+        if(id)
+        {
+            employeeService.updateEmployee(id, object).then((response) => {
+                console.log("update success"+response)
+                history.push('/')
+            }).catch(error => {
+                console.log(error)
+            })
+
+        }
+        else 
+       {
         employeeService.addEmployee(object).then(data=>{
-            console.log("data added");
+            console.log("data added"+object);
+            history.push('/');
             setDisplayeMessage("Successfullly added User")
             setTimeout(()=>{
                 window.location.reload();},3000);
             
         })
         .catch(err =>{
-            console.log("err while add");
+            console.log("err while add"+err.response);
             setDisplayeMessage("Error while  adding")
 
         })
-
-       
+           
+       }  
 
     }
 
 
     const reset=()=>{
-        setForm({...initialValue,id:formValue.id,isUpdate: formValue.isUpdate})
+        setForm({...initialValue,isUpdate: formValue.isUpdate})
         console.log(formValue)
     }
 
@@ -183,37 +267,38 @@ const PayrollForm=(props)=>{
                     </div>
                     <div className="error">{formValue.error.name}</div>
                     <div className="row">
-                        <label className="label text" htmlFor="profileUrl">Profile image</label>
+                        <label className="label text" htmlFor="profilePic">Profile image</label>
                         <div className="profile-radio-button">
                             <label>
-                                <input type='radio' checked={formValue.profileUrl=='../../assets/profile-images/Ellipse -3.png'} name="profileUrl"
-                                value="../../assets/profile-images/Ellipse -3.png" onChange={changeValue}/>
-                                <img className="profile" src={profile1}/>
+                                <input type='radio' checked={formValue.profilePic==profile1} name="profilePic"
+                                value={profile1} onChange={changeValue}/>
+                                <img className="profile" src={profileImage1}/>
                             </label>
                             <label>
-                                <input type='radio' checked={formValue.profileUrl=='../../assets/profile-images/Ellipse -2.png'} name="profileUrl"
-                                value="../../assets/profile-images/Ellipse -2.png" onChange={changeValue}/>
-                                <img className="profile" src={profile2}/>
+                                <input type='radio' checked={formValue.profilePic==profile2} name="profilePic"
+                                value={profile2} onChange={changeValue}/>
+                                <img className="profile" src={profileImage2}/>
                             </label>
                             <label>
-                                <input type='radio' checked={formValue.profileUrl=='../../assets/profile-images/Ellipse -1.png'} name="profileUrl"
-                                value="../../assets/profile-images/Ellipse -1.png" onChange={changeValue}/>
-                                <img className="profile" src={profile3}/>
+                                <input type='radio' checked={formValue.profilePic==profile3} name="profilePic"
+                                value={profile3} onChange={changeValue}/>
+                                <img className="profile" src={profileImage3}/>
                             </label>
                             <label>
-                                <input type='radio' checked={formValue.profileUrl=='../../assets/profile-images/Ellipse -8.png'} name="profileUrl"
-                                value="../../assets/profile-images/Ellipse -8.png" onChange={changeValue}/>
-                                <img className="profile" src={profile4}/>
+                                <input type='radio' checked={formValue.profilePic==profile4} name="profilePic"
+                                value={profile4} onChange={changeValue}/>
+                                <img className="profile" src={profileImage4}/>
                             </label>
                         </div>
                     </div>
-                    <div className="error">{formValue.error.profileUrl}</div>
+                    <div className="error">{formValue.error.profilePic}</div>
                     <div className="row">
-                        <label className="label text" htmlFor="gender">Gender</label>
+                        <label className="label text" htmlFor="gender" >Gender</label>
+                        
                         <div>
-                            <input type="radio" id="male" onChange={changeValue} name="gender" value="male"/>
+                            <input type="radio" id="male" onChange={changeValue} checked={formValue.gender=="male"} name="gender" value="male"/>
                             <label className="text" htmlFor="male">Male</label>
-                            <input type="radio" id="female" onChange={changeValue} name="gender" value="female"/>
+                            <input type="radio" id="female" onChange={changeValue} checked={formValue.gender=="female"} name="gender" value="female"/>
                             <label className="text" htmlFor="female">Female</label>
                             
                         </div>
@@ -225,8 +310,9 @@ const PayrollForm=(props)=>{
                             {formValue.allDepartment.map(item=>(
                                 <span className="deptlabel" key={item}>
 
-                                    <input className= "checkbox " type="checkbox" onChange={()=> onCheckChange(item)} name={item}
-                                    defaultChecked={()=>getChecked(item)} value={item}/>
+                                    <input className= "checkbox " type="checkbox" onChange={()=> onCheckChange(item)} 
+                                        name={item}
+                                    checked={formValue.department.includes(item)} value={item}/>
 
                                     <label className="text " htmlFor={item}>{item}</label>
                                 </span>
@@ -243,7 +329,7 @@ const PayrollForm=(props)=>{
                     </div>
                     <div className="error">{formValue.error.salary}</div>
                     <div className="row"><label className="label text" htmlFor="startDate">Start date</label><div>
-                        <select onChange={changeValue} id="day" name="day">
+                        <select onChange={changeValue} value={formValue.day} id="day" name="day">
                             <option value="" disabled selected>Day</option>
                             <option value="01">1</option>
                             <option value="02">2</option>
@@ -277,22 +363,22 @@ const PayrollForm=(props)=>{
                             <option value="30">30</option>
                             <option value="31">31</option>
                         </select>
-                        <select onChange={changeValue} id="month" name="month">
+                        <select onChange={changeValue}  value={formValue.month} id="month" name="month">
                             <option value="" disabled selected>Month</option>
-                            <option value="01">January</option>
-                            <option value="02">February</option>
-                            <option value="03">March</option>
-                            <option value="04">April</option>
-                            <option value="05">May</option>
-                            <option value="06">June</option>
-                            <option value="07">July</option>
-                            <option value="08">August</option>
-                            <option value="09">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                            <option value="Jan">January</option>
+                            <option value="Feb">February</option>
+                            <option value="Mar">March</option>
+                            <option value="Apr">April</option>
+                            <option value="May">May</option>
+                            <option value="Jun">June</option>
+                            <option value="Jul">July</option>
+                            <option value="Aug">August</option>
+                            <option value="Sep">September</option>
+                            <option value="Oct">October</option>
+                            <option value="Nov">November</option>
+                            <option value="Dec">December</option>
                         </select>
-                        <select onChange={changeValue} id="year" name="year">
+                        <select onChange={changeValue}  value={formValue.year} id="year" name="year">
                             <option value="" disabled selected>Year</option>
                             <option value="2021">2021</option>
                             <option value="2020">2020</option>
@@ -306,23 +392,25 @@ const PayrollForm=(props)=>{
                     </div>
                     <div className="error">{formValue.error.startDate}</div>
                     <div className="row">
-                        <label className="label text" htmlFor="notes">Notes</label>
-                        <textarea onChange={changeValue} id="notes" value={formValue.notes} className="input" name="notes" placeholder=""
+                        <label className="label text" htmlFor="note">Notes</label>
+                        <textarea onChange={changeValue} id="notes" value={formValue.note} className="input" name="note" placeholder=""
                             style={{heigt:'100%'}}></textarea>
 
                     </div>
 
                     <div className="buttonParent">
-                        <a routerLink="" className="resetButton button cancelButton">Cancel</a>
+                        {/* <a routerLink="/home" className="resetButton button cancelButton">Cancel</a> */}
+                        <Link to="/" >
+                            <button  className="resetButton button cancelButton">Cancel</button>
+                        </Link>
                         <div className="submit-reset">
-                            <button type="submit" className="button submitButton" id="submitButton">{formValue.isUpdate?'Update':'Submit'}</button>
+                            <button type="submit" className="button submitButton" id="submitButton">{id?'Update':'Submit'}</button>
                             <button type="button" onClick={reset} className="resetButton button">Reset</button>
                         </div>
                     </div>
 
                     <div className="displayMessage">{displayMessage}</div>
 
-                    
                 </form>
             </div>
         </div>
