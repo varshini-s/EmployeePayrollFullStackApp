@@ -2,14 +2,26 @@ const axios=require('axios').default;
 
 class AxiosService{
 
-    postService(url='',payload=null,tokenRequired=false,httpOptions=null)
+    postService(url,employee)
     {
-        return axios.post(url,payload,tokenRequired&& httpOptions)
+      
+        return axios.post(url,employee)
     }
 
     getService(url='')
     {
-        return axios.get(url)
+        return   axios.get(url)
+    }
+
+    putService(url='',data)
+    {
+        return  axios.put(url,data)
+    }
+
+    deleteService(url='')
+    {
+        return  axios.delete(url);
+        
     }
 }
 
