@@ -19,6 +19,11 @@ export default class EmployeeService{
         return   AxiosService.getService(`${this.baseUrl}employee/${id}`);
 
     }
+    getEmployeeByDepartment(department)
+    {
+        return   AxiosService.getService(`${this.baseUrl}employee/department/${department}`);
+
+    }
 
     updateEmployee(id,data)
     {
