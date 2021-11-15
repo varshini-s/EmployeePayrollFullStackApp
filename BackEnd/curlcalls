@@ -1,0 +1,15 @@
+
+ Working REST Call
+curl localhost:8080/employeepayrollservice/ -w "\n"
+curl localhost:8080/employeepayrollservice/get/1 -w "\n"
+curl localhost:8080/employeepayrollservice/department/Sales -w "\n"
+
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Mark Taylor","gender": "male","department": ["HR","Sales"], "salary": "500000", "startDate": "29 Oct 2019","note": "All In One","profilePic": "../assets/profile-images/Ellipse -3.png"}' "http://localhost:8080/employeepayrollservice/create" -w "\n"
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Jane Frank","gender": "female","department": ["HR"], "salary": "500000", "startDate": "29 Oct 2019","note": "All In One","profilePic": "../assets/profile-images/Ellipse -3.png"}' "http://localhost:8080/employeepayrollservice/create" -w "\n"
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Mark Taylor","gender": "male","department": ["HR","Sales"], "salary": "500000", "startDate": "29 Oct 2019","note": "All In One","profilePic": "../assets/profile-images/Ellipse -3.png"}' "http://localhost:8080/employeepayrollservice/create" -w "\n"
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name": "Mark Taylor","gender": "male","department": ["Sales"], "salary": "500000", "startDate": "29 Oct 2019","note": "All In One.. Terrific","profilePic": "../assets/profile-images/Ellipse -3.png"}' "http://localhost:8080/employeepayrollservice/update/2" -w "\n"
+curl -X DELETE localhost:8080/employeepayrollservice/delete/1 -w "\n"
+
+Error REST Call
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Mark Taylor","gender": "M","department": ["HR","Sales"], "salary": "200", "startDate": "29 Dec 2020","note": "All In One","profilePic": "../assets/profile-images/Ellipse -3.png"}' "http://localhost:8080/employeepayrollservice/create" -w "\n"
