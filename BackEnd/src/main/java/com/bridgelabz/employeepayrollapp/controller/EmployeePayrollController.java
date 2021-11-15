@@ -32,8 +32,6 @@ public class EmployeePayrollController
     @Autowired
     private IEmployeePayrollService employeePayrollService;
 
-	// curl localhost:8080/employeepayrollservice/ -w "\n"
-   // @RequestMapping(value = {"","/","/employee"})
    @GetMapping
     public ResponseEntity<ResponseDTO> getEmployeePayrollData()
     {
@@ -44,7 +42,6 @@ public class EmployeePayrollController
     }
 
 
-    //curl localhost:8080/employeepayrollservice/get/1 -w "\n"
     @GetMapping("/{empId}")
     public ResponseEntity<ResponseDTO> getEmployeePayrollData(@PathVariable("empId") int empId)
     {
@@ -65,7 +62,6 @@ public class EmployeePayrollController
 
     }
     
-    //curl -X POST -H "Content-Type: application/json" -d '{"name": "Lisa","salary":2000}' "http://localhost:8080/employeepayrollservice/create" -w "\n"
 
     @PostMapping
     public ResponseEntity<ResponseDTO> addEmployeePayrollData(@Valid @RequestBody EmployeePayrollDTO employeePayrollDTO)
@@ -77,7 +73,6 @@ public class EmployeePayrollController
         return new ResponseEntity<ResponseDTO>(respDTO,HttpStatus.OK);
     }
 	
-    //curl -X PUT -H "Content-Type: application/json" -d '{"name": "Lisa","salary": 4000}' "http://localhost:8080/employeepayrollservice/update/1" -w "\n"
     @PutMapping("/{empId}")
     public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@PathVariable("empId") int empId,@RequestBody EmployeePayrollDTO employeePayrollDTO)
     {
@@ -89,7 +84,6 @@ public class EmployeePayrollController
     }
 
     
-    //curl -X DELETE -H "Content-Type: application/json" localhost:8080/employeepayrollservice/delete/1 -w "\n"
     @DeleteMapping("/{empId}")
     public ResponseEntity<ResponseDTO> deleteEmployeePayrollData(@PathVariable("empId") int empId)
     {
